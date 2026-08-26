@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PolyMail - Multi-Lingual Mailing List & Campaign Dispatcher</title>
+  <meta name="description" content="Send personalized multi-lingual email campaigns in Portuguese, English, French, and Spanish based on recipient CSV preferences.">
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📬</text></svg>">
+</head>
+<body>
+  <div class="app-container">
+    
+    <!-- Top Global Header -->
+    <header class="app-header">
+      <div class="header-inner">
+        <div class="brand">
+          <div class="brand-icon">📬</div>
+          <div class="brand-info">
+            <h1>PolyMail</h1>
+            <p>
+              Multi-Lingual Mailing List Engine
+              <span class="lang-indicator-dots" title="Supported: Portuguese, English, French, Spanish">
+                <span class="dot-pt" title="Portuguese"></span>
+                <span class="dot-en" title="English"></span>
+                <span class="dot-fr" title="French"></span>
+                <span class="dot-es" title="Spanish"></span>
+              </span>
+            </p>
+          </div>
+        </div>
+
+        <div class="header-actions">
+          <button id="btn-save-draft" class="btn btn-secondary" title="Save templates and contacts to local storage">
+            <span>💾</span> Save Campaign Draft
+          </button>
+          <button id="btn-header-send" class="btn btn-primary" title="Launch sending center">
+            <span>🚀</span> Send to All Recipients
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Navigation Workflow Tabs -->
+    <nav class="workflow-nav-bar" aria-label="Workflow Navigation">
+      <ul class="nav-tabs">
+        <li class="nav-tab-item">
+          <button class="nav-tab-btn active" data-tab="tab-audience" id="nav-audience-btn">
+            <span class="tab-num">1</span>
+            <span>Audience &amp; CSV</span>
+            <span class="tab-badge" id="badge-total-contacts">0</span>
+          </button>
+        </li>
+        <li class="nav-tab-item">
+          <button class="nav-tab-btn" data-tab="tab-composer" id="nav-composer-btn">
+            <span class="tab-num">2</span>
+            <span>Compose 4 Languages</span>
+            <span class="tab-badge" id="badge-composer-status">4 Ready</span>
+          </button>
+        </li>
+        <li class="nav-tab-item">
+          <button class="nav-tab-btn" data-tab="tab-preview" id="nav-preview-btn">
+            <span class="tab-num">3</span>
+            <span>Recipient Preview</span>
+          </button>
+        </li>
+        <li class="nav-tab-item">
+          <button class="nav-tab-btn" data-tab="tab-dispatch" id="nav-dispatch-btn">
+            <span class="tab-num">4</span>
+            <span>Dispatch &amp; Logs</span>
+            <span class="tab-badge" id="badge-sent-count">0 Sent</span>
+          </button>
+        </li>
+      </ul>
+    </nav>
+
+    <!-- Main Views Container -->
+    <main class="app-main">
+      
+      <!-- =========================================================================
+           TAB 1: AUDIENCE & CSV MANAGER
+           ========================================================================= -->
+      <section id="tab-audience" class="tab-view active">
+        <div class="audience-grid">
+          
+          <!-- Left Column: Upload & Actions -->
+          <div class="glass-card">
+            <h2 style="font-family: var(--font-heading); font-size: 1.15rem; margin-bottom: 1rem; display: flex; align-items: center; gap: 8px;">
+              <span>📁</span> Import Mailing List
+            </h2>
+
+            <div id="csv-dropzone" class="dropzone-container">
+              <input type="file" id="csv-file-input" accept=".csv, .txt" style="display: none;">
+              <div class="dropzone-icon">📄</div>
+              <div class="dropzone-title">Upload CSV Mailing List</div>
+              <div class="dropzone-sub">Drag &amp; drop your CSV file here or click to browse</div>
+              <div class="dropzone-meta">Requires columns: <code>name</code>, <code>email</code>, <code>language</code></div>
+            </div>
+
+            <div style="margin-top: 1.25rem; display: flex; flex-direction: column; gap: 0.6rem;">
+              <button id="btn-load-sample" class="btn btn-secondary" style="width: 100%;">
+                <span>✨</span> Load Sample Multi-Lingual CSV
+              </button>
+              <button id="btn-open-add-contact" class="btn btn-secondary" style="width: 100%;">
+                <span>➕</span> Add Contact Manually
+              </button>
+              <button id="btn-clear-contacts" class="btn btn-danger btn-sm" style="width: 100%; margin-top: 0.5rem;">
+                <span>🗑️</span> Clear Audience
+              </button>
+            </div>
+
+            <div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--border-subtle); font-size: 0.8rem; color: var(--text-muted);">
+              <strong>💡 Smart Language Detection:</strong>
+              <ul style="margin-left: 1.2rem; margin-top: 0.35rem; line-height: 1.5;">
+                <li>Portuguese: <code>pt</code>, <code>Portuguese</code>, <code>Português</code></li>
+                <li>English: <code>en</code>, <code>English</code>, <code>Inglês</code></li>
+                <li>French: <code>fr</code>, <code>French</code>, <code>Français</code></li>
+                <li>Spanish: <code>es</code>, <code>Spanish</code>, <code>Español</code></li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Right Column: Stats & Contact List Table -->
+          <div>
+            <!-- Language Distribution Metric Cards -->
+            <div class="stats-row">
+              <div class="stat-pill stat-pt">
+                <div class="stat-icon">🇵🇹</div>
+                <div class="stat-content">
+                  <div class="stat-value" id="stat-pt-count">0</div>
+                  <div class="stat-label">Portuguese</div>
+                </div>
+              </div>
+              <div class="stat-pill stat-en">
+                <div class="stat-icon">🇬🇧</div>
+                <div class="stat-content">
+                  <div class="stat-value" id="stat-en-count">0</div>
+                  <div class="stat-label">English</div>
+                </div>
+              </div>
+              <div class="stat-pill stat-fr">
+                <div class="stat-icon">🇫🇷</div>
+                <div class="stat-content">
+                  <div class="stat-value" id="stat-fr-count">0</div>
+                  <div class="stat-label">French</div>
+                </div>
+              </div>
+              <div class="stat-pill stat-es">
+                <div class="stat-icon">🇪🇸</div>
+                <div class="stat-content">
+                  <div class="stat-value" id="stat-es-count">0</div>
+                  <div class="stat-label">Spanish</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Contacts Table Card -->
+            <div class="glass-card">
+              <div class="table-header-bar">
+                <div class="search-filter-box">
+                  <div class="search-input-wrapper">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" id="contact-search-input" placeholder="Search name or email...">
+                  </div>
+                  <select id="contact-lang-filter" class="custom-select">
+                    <option value="all">All Languages</option>
+                    <option value="pt">Portuguese (PT)</option>
+                    <option value="en">English (EN)</option>
+                    <option value="fr">French (FR)</option>
+                    <option value="es">Spanish (ES)</option>
+                  </select>
+                </div>
+
+                <button id="btn-goto-composer" class="btn btn-primary btn-sm">
+                  Next: Compose Mail <span>→</span>
+                </button>
+              </div>
+
+              <!-- Interactive Recipient Table -->
+              <div class="table-responsive">
+                <table class="contacts-table">
+                  <thead>
+                    <tr>
+                      <th style="width: 40px;">#</th>
+                      <th>Recipient Name</th>
+                      <th>Email Address</th>
+                      <th>Detected Language</th>
+                      <th>Status</th>
+                      <th style="text-align: right;">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody id="contacts-table-body">
+                    <!-- Dynamic Rows Populated by JS -->
+                  </tbody>
+                </table>
+                <div id="contacts-empty-state" class="empty-table-state">
+                  <div class="empty-table-icon">📭</div>
+                  <div style="font-weight: 600; font-size: 1.05rem; margin-bottom: 0.35rem;">No Recipients Loaded Yet</div>
+                  <p style="font-size: 0.85rem; max-width: 360px; margin: 0 auto 1.25rem auto;">
+                    Upload a CSV file or click "Load Sample Multi-Lingual CSV" to get started instantly.
+                  </p>
+                  <button id="btn-empty-load-sample" class="btn btn-primary btn-sm">
+                    ✨ Load 12 Sample Contacts
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- =========================================================================
+           TAB 2: MULTI-LANGUAGE WYSIWYG COMPOSER
+           ========================================================================= -->
+      <section id="tab-composer" class="tab-view">
+        <div class="composer-grid">
+          
+          <!-- Main Editor Column -->
+          <div>
+            <!-- Language Selector Tabs -->
+            <div class="language-selector-bar">
+              <div class="lang-tabs-group">
+                <button class="lang-tab-btn active" data-lang="pt" id="tab-btn-pt">
+                  <span>🇵🇹 / 🇧🇷</span>
+                  <span>Português</span>
+                  <span class="lang-status-pill status-ready" data-lang="pt">✓ Ready</span>
+                </button>
+                <button class="lang-tab-btn" data-lang="en" id="tab-btn-en">
+                  <span>🇬🇧 / 🇺🇸</span>
+                  <span>English</span>
+                  <span class="lang-status-pill status-ready" data-lang="en">✓ Ready</span>
+                </button>
+                <button class="lang-tab-btn" data-lang="fr" id="tab-btn-fr">
+                  <span>🇫🇷</span>
+                  <span>Français</span>
+                  <span class="lang-status-pill status-ready" data-lang="fr">✓ Ready</span>
+                </button>
+                <button class="lang-tab-btn" data-lang="es" id="tab-btn-es">
+                  <span>🇪🇸</span>
+                  <span>Español</span>
+                  <span class="lang-status-pill status-ready" data-lang="es">✓ Ready</span>
+                </button>
+              </div>
+
+              <!-- Template Preset Selector -->
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <select id="template-preset-select" class="custom-select" style="font-size: 0.8rem;">
+                  <option value="">⚡ Load Preset Campaign...</option>
+                  <option value="welcome">🎉 Welcome &amp; Onboarding</option>
+                  <option value="product_launch">🚀 Product Launch &amp; Updates</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Subject Line Input -->
+            <div class="subject-input-group">
+              <div class="subject-label">
+                <span>Email Subject Line (<span id="editor-current-lang-badge">Português</span>)</span>
+                <span style="font-size: 0.72rem; text-transform: none; color: var(--text-dim);">Variables supported: <code>{{name}}</code></span>
+              </div>
+              <input type="text" id="mail-subject-input" class="subject-input" placeholder="e.g. Olá {{name}}, temos novidades especiais...">
+            </div>
+
+            <!-- WYSIWYG Editor Container -->
+            <div class="editor-container">
+              
+              <!-- Toolbar -->
+              <div class="editor-toolbar" id="rich-editor-toolbar">
+                <div class="toolbar-group">
+                  <button class="tool-btn" data-format-cmd="bold" title="Bold (Ctrl+B)"><strong>B</strong></button>
+                  <button class="tool-btn" data-format-cmd="italic" title="Italic (Ctrl+I)"><em>I</em></button>
+                  <button class="tool-btn" data-format-cmd="underline" title="Underline (Ctrl+U)"><u>U</u></button>
+                  <button class="tool-btn" data-format-cmd="strikeThrough" title="Strikethrough"><s>S</s></button>
+                </div>
+
+                <div class="toolbar-divider"></div>
+
+                <div class="toolbar-group">
+                  <button class="tool-btn" data-format-cmd="formatBlock" data-format-val="h1" title="Heading 1">H1</button>
+                  <button class="tool-btn" data-format-cmd="formatBlock" data-format-val="h2" title="Heading 2">H2</button>
+                  <button class="tool-btn" data-format-cmd="formatBlock" data-format-val="h3" title="Heading 3">H3</button>
+                  <button class="tool-btn" data-format-cmd="formatBlock" data-format-val="p" title="Paragraph">¶</button>
+                  <button class="tool-btn" data-format-cmd="formatBlock" data-format-val="blockquote" title="Quote">”</button>
+                </div>
+
+                <div class="toolbar-divider"></div>
+
+                <div class="toolbar-group">
+                  <button class="tool-btn" data-format-cmd="insertUnorderedList" title="Bullet List">• ≡</button>
+                  <button class="tool-btn" data-format-cmd="insertOrderedList" title="Numbered List">1. ≡</button>
+                  <button class="tool-btn" data-format-cmd="insertHorizontalRule" title="Horizontal Line">—</button>
+                </div>
+
+                <div class="toolbar-divider"></div>
+
+                <div class="toolbar-group">
+                  <button class="tool-btn" id="btn-insert-link" title="Insert Hyperlink">🔗</button>
+                  <button class="tool-btn" data-format-cmd="unlink" title="Remove Link">⛓️‍💥</button>
+                  
+                  <div class="color-picker-wrapper" title="Text Color">
+                    <span style="font-weight: 700; color: #a5b4fc;">A</span>
+                    <input type="color" id="text-color-picker" value="#ffffff">
+                  </div>
+
+                  <div class="color-picker-wrapper" title="Highlight Color">
+                    <span style="font-size: 0.85rem;">🖍️</span>
+                    <input type="color" id="bg-color-picker" value="#6366f1">
+                  </div>
+
+                  <button class="tool-btn" data-format-cmd="removeFormat" title="Clear Formatting">🧹</button>
+                </div>
+
+                <div class="toolbar-divider" style="margin-left: auto;"></div>
+
+                <button id="btn-toggle-html" class="btn btn-secondary btn-sm" title="Toggle Raw HTML source code">
+                  <span class="icon">&lt;/&gt;</span> HTML Code
+                </button>
+              </div>
+
+              <!-- Dynamic Tag Pills Inserter -->
+              <div class="variables-bar">
+                <span class="variables-title">Insert Tag:</span>
+                <button type="button" class="tag-pill-btn" data-tag="{{name}}" title="Recipient Name (e.g. Ana Silva)">+ {{name}}</button>
+                <button type="button" class="tag-pill-btn" data-tag="{{email}}" title="Recipient Email (e.g. ana@empresa.pt)">+ {{email}}</button>
+                <button type="button" class="tag-pill-btn" data-tag="{{language}}" title="Recipient Language (e.g. Português)">+ {{language}}</button>
+                <button type="button" class="tag-pill-btn" data-tag="{{date}}" title="Current Formatted Date">+ {{date}}</button>
+                <button type="button" class="tag-pill-btn" data-tag="{{unsubscribe}}" title="Unsubscribe Link">+ {{unsubscribe}}</button>
+              </div>
+
+              <!-- Visual WYSIWYG Editable Surface -->
+              <div id="rich-editor-content" class="rich-editor-content" contenteditable="true" spellcheck="false">
+                <!-- Populated dynamically by MailEditor -->
+              </div>
+
+              <!-- Raw HTML Editor Textarea (Hidden by default) -->
+              <textarea id="html-source-content" class="html-source-content" spellcheck="false"></textarea>
+            </div>
+          </div>
+
+          <!-- Sidebar Information & Checklist -->
+          <div class="composer-sidebar-card">
+            <div class="glass-card">
+              <h3 style="font-family: var(--font-heading); font-size: 1rem; margin-bottom: 0.85rem;">
+                📋 Campaign Readiness
+              </h3>
+
+              <ul class="status-checklist">
+                <li class="checklist-item">
+                  <div class="checklist-lang">
+                    <span>🇵🇹</span>
+                    <span>Português</span>
+                  </div>
+                  <span class="lang-status-pill status-ready" data-lang="pt">✓ Ready</span>
+                </li>
+                <li class="checklist-item">
+                  <div class="checklist-lang">
+                    <span>🇬🇧</span>
+                    <span>English</span>
+                  </div>
+                  <span class="lang-status-pill status-ready" data-lang="en">✓ Ready</span>
+                </li>
+                <li class="checklist-item">
+                  <div class="checklist-lang">
+                    <span>🇫🇷</span>
+                    <span>Français</span>
+                  </div>
+                  <span class="lang-status-pill status-ready" data-lang="fr">✓ Ready</span>
+                </li>
+                <li class="checklist-item">
+                  <div class="checklist-lang">
+                    <span>🇪🇸</span>
+                    <span>Español</span>
+                  </div>
+                  <span class="lang-status-pill status-ready" data-lang="es">✓ Ready</span>
+                </li>
+              </ul>
+
+              <div style="margin-top: 1.25rem;">
+                <button id="btn-goto-preview" class="btn btn-primary" style="width: 100%;">
+                  <span>👁️</span> Test Recipient Preview →
+                </button>
+              </div>
+            </div>
+
+            <!-- Variable Cheatsheet Card -->
+            <div class="glass-card">
+              <h3 style="font-family: var(--font-heading); font-size: 0.95rem; margin-bottom: 0.6rem;">
+                🏷️ Personalization Guide
+              </h3>
+              <p style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 0.75rem;">
+                Placeholders are dynamically replaced with recipient values when sending or previewing.
+              </p>
+              <div style="font-size: 0.78rem; display: flex; flex-direction: column; gap: 6px; font-family: var(--font-mono); color: #c7d2fe;">
+                <div><code>{{name}}</code> &rarr; Recipient full name</div>
+                <div><code>{{email}}</code> &rarr; Recipient email</div>
+                <div><code>{{language}}</code> &rarr; Recipient language</div>
+                <div><code>{{date}}</code> &rarr; Today's localized date</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- =========================================================================
+           TAB 3: PERSONALIZED RECIPIENT PREVIEW
+           ========================================================================= -->
+      <section id="tab-preview" class="tab-view">
+        <div class="preview-container">
+          
+          <!-- Left Column: Recipient Selector -->
+          <div class="glass-card">
+            <h2 style="font-family: var(--font-heading); font-size: 1.1rem; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 8px;">
+              <span>👥</span> Select Recipient
+            </h2>
+            <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1rem;">
+              Click on any contact to preview how their personalized email will look in their language.
+            </p>
+
+            <div class="search-input-wrapper" style="margin-bottom: 0.85rem;">
+              <span class="search-icon">🔍</span>
+              <input type="text" id="preview-search-input" placeholder="Filter recipients...">
+            </div>
+
+            <div id="preview-recipient-list" class="recipient-picker-list">
+              <!-- Recipient items injected by JS -->
+            </div>
+          </div>
+
+          <!-- Right Column: Email Client Frame -->
+          <div>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.85rem;">
+              <div style="font-size: 0.85rem; color: var(--text-muted);">
+                Showing live rendered email for: <strong id="preview-active-name" style="color: var(--text-main);">-</strong>
+              </div>
+
+              <div style="display: flex; gap: 8px;">
+                <button id="btn-goto-dispatch" class="btn btn-success btn-sm">
+                  <span>🚀</span> Proceed to Dispatch &rarr;
+                </button>
+              </div>
+            </div>
+
+            <!-- Mail Mockup Window -->
+            <div class="mail-client-frame">
+              <!-- Header with Subject & Sender Info -->
+              <div class="mail-client-header">
+                <div class="client-subject" id="preview-rendered-subject">Loading subject...</div>
+                
+                <div class="client-meta-row">
+                  <div class="client-sender">
+                    <div class="sender-avatar" id="preview-sender-avatar">PM</div>
+                    <div>
+                      <div style="font-weight: 600; color: #1e293b;">
+                        Mailing List Dispatcher <span style="font-weight: normal; color: #64748b;">&lt;campaign@news.company.com&gt;</span>
+                      </div>
+                      <div style="font-size: 0.75rem; color: #64748b;">
+                        To: <strong id="preview-to-name">-</strong> &lt;<span id="preview-to-email">-</span>&gt;
+                      </div>
+                    </div>
+                  </div>
+
+                  <div style="text-align: right;">
+                    <div id="preview-lang-badge" class="badge-lang badge-lang-pt">🇵🇹 Portuguese</div>
+                    <div style="font-size: 0.72rem; color: #94a3b8; margin-top: 2px;" id="preview-date-label">Today</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Rendered Email Body -->
+              <div class="client-body-rendered" id="preview-rendered-body">
+                <!-- Interpolated HTML injected here -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- =========================================================================
+           TAB 4: DISPATCH & SENDING CENTER
+           ========================================================================= -->
+      <section id="tab-dispatch" class="tab-view">
+        
+        <!-- Hero Launch Card -->
+        <div class="dispatch-hero">
+          <div style="font-size: 3rem; margin-bottom: 0.5rem;">🚀</div>
+          <h2>Multi-Lingual Campaign Dispatcher</h2>
+          <p>
+            Ready to send personalized emails to all recipients in your mailing list.
+            Each contact will receive their custom email rendered in their language.
+          </p>
+
+          <div style="display: inline-flex; gap: 1rem; align-items: center; background: rgba(0,0,0,0.3); padding: 0.6rem 1.5rem; border-radius: var(--radius-full); margin-bottom: 1.5rem; border: 1px solid var(--border-subtle);">
+            <div style="font-size: 0.88rem;">
+              Audience: <strong id="dispatch-total-recipients">0</strong> recipients
+            </div>
+            <div style="width: 1px; height: 16px; background: var(--border-subtle);"></div>
+            <div style="font-size: 0.88rem;">
+              Speed: 
+              <select id="dispatch-speed-select" class="custom-select" style="padding: 2px 8px; font-size: 0.8rem; margin-left: 4px;">
+                <option value="150">Fast (150ms/email)</option>
+                <option value="400" selected>Realistic (400ms/email)</option>
+                <option value="0">Instant (Batch)</option>
+              </select>
+            </div>
+          </div>
+
+          <div>
+            <button id="btn-start-dispatch" class="btn btn-primary btn-lg">
+              <span>✉️</span> Launch Campaign to All Recipients
+            </button>
+          </div>
+        </div>
+
+        <!-- Live Progress Status Section -->
+        <div id="dispatch-progress-section" class="sending-progress-card" style="display: none;">
+          <div class="progress-header">
+            <div>
+              <span id="dispatch-status-spinner" style="display: inline-block; margin-right: 6px; animation: spin 1s linear infinite;">⏳</span>
+              <strong id="dispatch-status-text">Dispatching campaign...</strong>
+              <span style="font-size: 0.82rem; color: var(--text-muted); margin-left: 8px;" id="dispatch-counter-text">(0 / 0)</span>
+            </div>
+            <div>
+              <span style="font-weight: 700; font-family: var(--font-mono); color: var(--primary-color);" id="dispatch-percent-text">0%</span>
+            </div>
+          </div>
+
+          <div class="progress-bar-track">
+            <div id="dispatch-progress-bar" class="progress-bar-fill"></div>
+          </div>
+
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 1rem;">
+            <div style="font-size: 0.82rem; color: var(--text-muted);">
+              Currently emailing: <code id="dispatch-current-contact" style="color: #c7d2fe;">-</code>
+            </div>
+            <div style="display: flex; gap: 8px;">
+              <button id="btn-pause-dispatch" class="btn btn-secondary btn-sm">⏸️ Pause</button>
+              <button id="btn-stop-dispatch" class="btn btn-danger btn-sm">⏹️ Stop</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Live Activity Stream & Sent History -->
+        <div class="glass-card">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 8px;">
+            <h3 style="font-family: var(--font-heading); font-size: 1.1rem; display: flex; align-items: center; gap: 8px;">
+              <span>📡</span> Live Delivery Telemetry &amp; Logs
+            </h3>
+
+            <div style="display: flex; gap: 8px;">
+              <button id="btn-export-csv" class="btn btn-secondary btn-sm">
+                <span>📥</span> Export Report (CSV)
+              </button>
+              <button id="btn-clear-logs" class="btn btn-secondary btn-sm">
+                <span>🧹</span> Clear Logs
+              </button>
+            </div>
+          </div>
+
+          <!-- Real-Time Terminal Feed -->
+          <div id="terminal-feed" class="terminal-log-feed">
+            <div style="color: var(--text-dim); text-align: center; padding: 2rem 0;">
+              No dispatch activity recorded yet. Launch a campaign above to see real-time streaming logs.
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+    </main>
+
+    <!-- =========================================================================
+         MODALS & DIALOGS
+         ========================================================================= -->
+
+    <!-- Confirmation Modal Before Dispatching -->
+    <div id="modal-confirm-dispatch" class="modal-backdrop">
+      <div class="modal-dialog">
+        <div class="modal-header">
+          <h3 style="font-family: var(--font-heading); font-size: 1.15rem;">🚀 Confirm Email Campaign Dispatch</h3>
+          <button class="btn-icon btn-secondary modal-close-btn" style="border: none; background: transparent; cursor: pointer; color: var(--text-muted);">✕</button>
+        </div>
+        <div class="modal-body">
+          <p style="margin-bottom: 1.25rem; font-size: 0.9rem; color: var(--text-muted);">
+            You are about to dispatch personalized emails to all valid recipients in your mailing list.
+          </p>
+
+          <div style="background: var(--bg-card-elevated); padding: 1rem; border-radius: var(--radius-md); margin-bottom: 1.25rem; border: 1px solid var(--border-subtle);">
+            <div style="font-weight: 600; font-size: 0.9rem; margin-bottom: 0.6rem;">Audience Language Breakdown:</div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 0.85rem;">
+              <div>🇵🇹 Portuguese: <strong id="modal-breakdown-pt">0</strong></div>
+              <div>🇬🇧 English: <strong id="modal-breakdown-en">0</strong></div>
+              <div>🇫🇷 French: <strong id="modal-breakdown-fr">0</strong></div>
+              <div>🇪🇸 Spanish: <strong id="modal-breakdown-es">0</strong></div>
+            </div>
+          </div>
+
+          <div id="modal-warning-missing" style="display: none; background: var(--danger-bg); border: 1px solid rgba(239, 68, 68, 0.3); color: #fca5a5; padding: 0.75rem; border-radius: var(--radius-md); font-size: 0.82rem; margin-bottom: 1rem;">
+            ⚠️ Warning: Some language templates are empty or missing subject lines.
+          </div>
+
+          <p style="font-size: 0.82rem; color: var(--text-dim);">
+            Each recipient will receive the corresponding language template with their name and email tags interpolated.
+          </p>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary modal-close-btn">Cancel</button>
+          <button id="btn-modal-confirm-send" class="btn btn-primary">
+            Confirm &amp; Send Campaign
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Add Recipient Manually Modal -->
+    <div id="modal-add-recipient" class="modal-backdrop">
+      <div class="modal-dialog">
+        <div class="modal-header">
+          <h3 style="font-family: var(--font-heading); font-size: 1.15rem;">➕ Add Recipient Manually</h3>
+          <button class="btn-icon btn-secondary modal-close-btn" style="border: none; background: transparent; cursor: pointer; color: var(--text-muted);">✕</button>
+        </div>
+        <div class="modal-body">
+          <form id="form-add-recipient">
+            <div style="margin-bottom: 1rem;">
+              <label style="display: block; font-size: 0.82rem; font-weight: 600; margin-bottom: 4px; color: var(--text-muted);">Recipient Name</label>
+              <input type="text" id="manual-name" class="subject-input" placeholder="e.g. Maria Santos" required>
+            </div>
+            <div style="margin-bottom: 1rem;">
+              <label style="display: block; font-size: 0.82rem; font-weight: 600; margin-bottom: 4px; color: var(--text-muted);">Email Address</label>
+              <input type="email" id="manual-email" class="subject-input" placeholder="e.g. maria.santos@exemplo.pt" required>
+            </div>
+            <div style="margin-bottom: 1rem;">
+              <label style="display: block; font-size: 0.82rem; font-weight: 600; margin-bottom: 4px; color: var(--text-muted);">Language</label>
+              <select id="manual-lang" class="custom-select" style="width: 100%;">
+                <option value="pt">🇵🇹 Portuguese (Português)</option>
+                <option value="en">🇬🇧 English (English)</option>
+                <option value="fr">🇫🇷 French (Français)</option>
+                <option value="es">🇪🇸 Spanish (Español)</option>
+              </select>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary modal-close-btn">Cancel</button>
+          <button id="btn-submit-add-recipient" class="btn btn-primary">Add Contact</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Inspect Sent Mail Modal -->
+    <div id="modal-inspect-email" class="modal-backdrop">
+      <div class="modal-dialog" style="max-width: 680px;">
+        <div class="modal-header">
+          <h3 style="font-family: var(--font-heading); font-size: 1.15rem;">✉️ Sent Email Inspector</h3>
+          <button class="btn-icon btn-secondary modal-close-btn" style="border: none; background: transparent; cursor: pointer; color: var(--text-muted);">✕</button>
+        </div>
+        <div class="modal-body" id="modal-inspect-content">
+          <!-- Injected dynamically -->
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary modal-close-btn">Close</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast Notification Feed -->
+    <div id="toast-container" class="toast-container"></div>
+
+  </div>
+
+  <!-- Scripts -->
+  <script src="csv-parser.js"></script>
+  <script src="editor.js"></script>
+  <script src="mailer.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
