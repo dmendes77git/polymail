@@ -13,13 +13,21 @@ Aplicação web interativa para gestão de listas de correio eletrónico, redaç
 - **Guardar Rascunhos**: Gravação automática de modelos e lista de contactos no armazenamento local do navegador.
 - **Exportação de Relatórios**: Exportação de relatórios de auditoria de entrega em formato CSV.
 
-## 🛠️ Como Executar a Aplicação
+## 🛠️ Como Executar a Aplicação no Windows
 
-### Opção 1: Diretamente no Navegador
-Abra o ficheiro `index.html` em qualquer navegador web moderno.
+### Opção 1: Aplicação Desktop Nativa (.EXE - Recomendado)
+Dê **duplo clique** no ficheiro **`BomSucessoMailing.exe`**.
+- Abre como uma aplicação de secretária independente sem barras de endereço ou separadores.
+- Não necessita de instalar NodeJS, Python ou outros programas.
 
-### Opção 2: Servidor Local (PowerShell)
-Execute o script no terminal:
+### Opção 2: Pelo Ficheiro de Arranque Rápido
+Dê **duplo clique** no ficheiro **`iniciar.bat`**.
+
+### Opção 3: Diretamente no Navegador
+Abra o ficheiro **`index.html`** no seu navegador preferido (Google Chrome, Microsoft Edge, Firefox).
+
+### Opção 4: Servidor Local PowerShell
+Execute o comando no terminal:
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\server.ps1
 ```
