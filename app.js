@@ -1,5 +1,6 @@
 /**
- * Bom Sucesso Mailing App - Multi-Lingual Mailing List Application Controller
+ * Bom Sucesso Mailing - Controlador Principal da Aplicação
+ * Idioma de Interface: Português (PT-PT)
  */
 
 const App = {
@@ -9,15 +10,15 @@ const App = {
   activeTab: 'tab-audience',
 
   init() {
-    // 1. Initialize Sub-modules
+    // 1. Inicializar sub-módulos
     window.CSVParser = window.CSVParser || {};
     window.MailEditor.init();
     window.MailerEngine.loadSentHistory();
 
-    // 2. Load contacts from storage
+    // 2. Carregar contactos guardados
     this.loadContactsFromStorage();
 
-    // 3. Bind UI Events
+    // 3. Associar eventos de interface
     this.bindNavigation();
     this.bindCSVUpload();
     this.bindContactActions();
@@ -26,19 +27,19 @@ const App = {
     this.bindModals();
     this.bindSaveDraft();
 
-    // 4. Initial Render
+    // 4. Renderização inicial
     this.renderAudienceTable();
     this.updateStatsCards();
     this.renderTerminalLogs();
     this.updateHeaderBadges();
 
-    // Auto-load sample contacts if list is empty for immediate rich experience
+    // Carregar contactos de exemplo caso a lista esteja vazia
     if (this.recipients.length === 0) {
       this.loadSampleContacts(false);
     }
   },
 
-  // Toast Notification System
+  // Sistema de Notificações Toast
   showToast(message, type = 'info') {
     const container = document.getElementById('toast-container');
     if (!container) return;
@@ -68,7 +69,7 @@ const App = {
     }, 3500);
   },
 
-  // Navigation Tabs Switching
+  // Navegação entre Separadores
   bindNavigation() {
     document.querySelectorAll('.nav-tab-btn').forEach(btn => {
       btn.addEventListener('click', () => {
@@ -77,7 +78,7 @@ const App = {
       });
     });
 
-    // Next Step Shortcut Buttons
+    // Botões de Passo Seguinte
     const gotoComposer = document.getElementById('btn-goto-composer');
     if (gotoComposer) {
       gotoComposer.addEventListener('click', () => this.switchTab('tab-composer'));
@@ -102,7 +103,7 @@ const App = {
   switchTab(tabId) {
     this.activeTab = tabId;
 
-    // Update Nav Buttons
+    // Atualizar botões de navegação
     document.querySelectorAll('.nav-tab-btn').forEach(btn => {
       if (btn.getAttribute('data-tab') === tabId) {
         btn.classList.add('active');
@@ -111,7 +112,7 @@ const App = {
       }
     });
 
-    // Update Views
+    // Atualizar vistas
     document.querySelectorAll('.tab-view').forEach(view => {
       if (view.id === tabId) {
         view.classList.add('active');
@@ -120,7 +121,7 @@ const App = {
       }
     });
 
-    // Tab-specific hooks
+    // Ações específicas ao mudar de separador
     if (tabId === 'tab-preview') {
       this.renderPreviewRecipientList();
       this.renderPreviewCard();
@@ -131,7 +132,7 @@ const App = {
     }
   },
 
-  // CSV File Upload & Dropzone
+  // Carregamento de Ficheiros CSV
   bindCSVUpload() {
     const dropzone = document.getElementById('csv-dropzone');
     const fileInput = document.getElementById('csv-file-input');
@@ -160,11 +161,11 @@ const App = {
     fileInput.addEventListener('change', (e) => {
       if (e.target.files && e.target.files.length > 0) {
         this.handleFileUpload(e.target.files[0]);
-        e.target.value = ''; // reset
+        e.target.value = ''; // reinicializar
       }
     });
 
-    // Load sample buttons
+    // Botões de dados de exemplo
     const sampleBtn = document.getElementById('btn-load-sample');
     if (sampleBtn) {
       sampleBtn.addEventListener('click', () => this.loadSampleContacts(true));
@@ -185,7 +186,7 @@ const App = {
       const parsed = window.CSVParser.parse(csvText);
 
       if (parsed.recipients.length === 0) {
-        this.showToast('No valid recipient rows found in the CSV file.', 'error');
+        this.showToast('Nenhum destinatário válido encontrado no ficheiro CSV.', 'error');
         return;
       }
 
@@ -195,11 +196,11 @@ const App = {
       this.updateStatsCards();
       this.updateHeaderBadges();
 
-      this.showToast(`Imported ${parsed.recipients.length} recipients across 4 languages!`, 'success');
+      this.showToast(`Importados ${parsed.recipients.length} destinatários em 4 idiomas com sucesso!`, 'success');
     };
 
     reader.onerror = () => {
-      this.showToast('Failed to read the uploaded CSV file.', 'error');
+      this.showToast('Erro ao ler o ficheiro CSV carregado.', 'error');
     };
 
     reader.readAsText(file);
@@ -213,8 +214,8 @@ Camille Dupont,camille.dupont@paris-solutions.fr,French
 Carlos Mendoza,carlos.mendoza@negocios.es,Spanish
 Mateo Rossi,mateo.rossi@lisboa-tech.pt,pt
 Sarah Jenkins,sarah.jenkins@globalmedia.org,en
-Étienne Moreau,etienne.moreau@lyon-design.fr,fr
-Lucía Fernandez,lucia.fernandez@madrid-digital.es,es
+Etienne Moreau,etienne.moreau@lyon-design.fr,fr
+Lucia Fernandez,lucia.fernandez@madrid-digital.es,es
 Thiago Oliveira,thiago.oliveira@saopaulo.br,Portuguese
 Emily Watson,emily.watson@startup.io,English
 Claire Beauchamp,claire.beauchamp@marseille.fr,French
@@ -228,11 +229,11 @@ Diego Ramirez,diego.ramirez@buenosaires.ar,Spanish`;
     this.updateHeaderBadges();
 
     if (showNotification) {
-      this.showToast('Loaded 12 sample contacts (Portuguese, English, French, Spanish).', 'success');
+      this.showToast('Carregados 12 contactos de exemplo (Português, Inglês, Francês, Espanhol).', 'success');
     }
   },
 
-  // Audience Table & Filtering
+  // Tabela de Contactos & Filtros
   bindContactActions() {
     const searchInput = document.getElementById('contact-search-input');
     const langFilter = document.getElementById('contact-lang-filter');
@@ -249,13 +250,13 @@ Diego Ramirez,diego.ramirez@buenosaires.ar,Spanish`;
     if (clearBtn) {
       clearBtn.addEventListener('click', () => {
         if (this.recipients.length === 0) return;
-        if (confirm('Are you sure you want to clear all recipients from your audience?')) {
+        if (confirm('Tem a certeza de que pretende limpar todos os destinatários da sua lista?')) {
           this.recipients = [];
           this.saveContactsToStorage();
           this.renderAudienceTable();
           this.updateStatsCards();
           this.updateHeaderBadges();
-          this.showToast('Audience cleared.', 'info');
+          this.showToast('Lista de destinatários limpa.', 'info');
         }
       });
     }
@@ -300,10 +301,10 @@ Diego Ramirez,diego.ramirez@buenosaires.ar,Spanish`;
 
     const langBadges = {
       pt: '<span class="badge-lang badge-lang-pt">🇵🇹 Português</span>',
-      en: '<span class="badge-lang badge-lang-en">🇬🇧 English</span>',
-      fr: '<span class="badge-lang badge-lang-fr">🇫🇷 Français</span>',
-      es: '<span class="badge-lang badge-lang-es">🇪🇸 Español</span>',
-      unknown: '<span class="badge-lang badge-lang-unknown">🌐 Unknown (Default EN)</span>'
+      en: '<span class="badge-lang badge-lang-en">🇬🇧 Inglês</span>',
+      fr: '<span class="badge-lang badge-lang-fr">🇫🇷 Francês</span>',
+      es: '<span class="badge-lang badge-lang-es">🇪🇸 Espanhol</span>',
+      unknown: '<span class="badge-lang badge-lang-unknown">🌐 Desconhecido (Padrão EN)</span>'
     };
 
     tbody.innerHTML = list.map((r, idx) => `
@@ -318,14 +319,14 @@ Diego Ramirez,diego.ramirez@buenosaires.ar,Spanish`;
         <td>${langBadges[r.language] || langBadges.unknown}</td>
         <td>
           ${r.isValidEmail 
-            ? '<span class="email-valid">● Valid</span>' 
-            : '<span class="email-invalid">● Invalid Email</span>'}
+            ? '<span class="email-valid">● Válido</span>' 
+            : '<span class="email-invalid">● E-mail Inválido</span>'}
         </td>
         <td style="text-align: right;">
-          <button class="btn btn-secondary btn-sm" onclick="App.previewRecipient('${r.id}')" title="Preview email in recipient's language">
+          <button class="btn btn-secondary btn-sm" onclick="App.previewRecipient('${r.id}')" title="Pré-visualizar e-mail no idioma do destinatário">
             👁️
           </button>
-          <button class="btn btn-danger btn-sm" onclick="App.deleteRecipient('${r.id}')" title="Delete recipient">
+          <button class="btn btn-danger btn-sm" onclick="App.deleteRecipient('${r.id}')" title="Eliminar destinatário">
             🗑️
           </button>
         </td>
@@ -339,7 +340,7 @@ Diego Ramirez,diego.ramirez@buenosaires.ar,Spanish`;
     this.renderAudienceTable();
     this.updateStatsCards();
     this.updateHeaderBadges();
-    this.showToast('Recipient removed', 'info');
+    this.showToast('Destinatário removido da lista.', 'info');
   },
 
   updateStatsCards() {
@@ -368,11 +369,11 @@ Diego Ramirez,diego.ramirez@buenosaires.ar,Spanish`;
     const contactBadge = document.getElementById('badge-total-contacts');
     const sentBadge = document.getElementById('badge-sent-count');
 
-    if (contactBadge) contactBadge.textContent = `${this.recipients.length}`;
-    if (sentBadge) sentBadge.textContent = `${window.MailerEngine.sentHistory.length} Sent`;
+    if (contactBadge) contactBadge.textContent = `${this.recipients.length} Contactos`;
+    if (sentBadge) sentBadge.textContent = `${window.MailerEngine.sentHistory.length} Enviados`;
   },
 
-  // View 3: Recipient Previewer
+  // Vista 3: Pré-visualização do Destinatário
   bindPreviewView() {
     const searchInput = document.getElementById('preview-search-input');
     if (searchInput) {
@@ -391,7 +392,7 @@ Diego Ramirez,diego.ramirez@buenosaires.ar,Spanish`;
     );
 
     if (filtered.length === 0) {
-      container.innerHTML = `<div style="padding: 2rem; text-align: center; color: var(--text-dim); font-size: 0.85rem;">No contacts available</div>`;
+      container.innerHTML = `<div style="padding: 2rem; text-align: center; color: var(--text-dim); font-size: 0.85rem;">Nenhum contacto disponível</div>`;
       return;
     }
 
@@ -411,7 +412,7 @@ Diego Ramirez,diego.ramirez@buenosaires.ar,Spanish`;
           </div>
           <div class="picker-item-email">${this.escapeHtml(r.email)}</div>
           <div style="font-size: 0.72rem; color: var(--text-dim); text-transform: uppercase;">
-            Language: <strong style="color: #c7d2fe;">${r.language.toUpperCase()}</strong>
+            Idioma: <strong style="color: #c7d2fe;">${r.language.toUpperCase()}</strong>
           </div>
         </div>
       `;
@@ -433,7 +434,7 @@ Diego Ramirez,diego.ramirez@buenosaires.ar,Spanish`;
     const rec = this.recipients.find(r => r.id === this.selectedPreviewRecipientId) || this.recipients[0];
     if (!rec) {
       const bodyEl = document.getElementById('preview-rendered-body');
-      if (bodyEl) bodyEl.innerHTML = '<p style="color: #64748b;">No recipient selected. Upload contacts first.</p>';
+      if (bodyEl) bodyEl.innerHTML = '<p style="color: #64748b;">Nenhum destinatário selecionado. Importe contactos primeiro.</p>';
       return;
     }
 
@@ -453,7 +454,7 @@ Diego Ramirez,diego.ramirez@buenosaires.ar,Spanish`;
     if (toName) toName.textContent = rec.name;
     if (toEmail) toEmail.textContent = rec.email;
     if (bodyEl) bodyEl.innerHTML = rendered.htmlBody;
-    if (dateLabel) dateLabel.textContent = new Date().toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
+    if (dateLabel) dateLabel.textContent = new Date().toLocaleDateString('pt-PT', { month: 'long', day: 'numeric', year: 'numeric' });
 
     if (langBadge) {
       const badgeClasses = {
@@ -463,17 +464,17 @@ Diego Ramirez,diego.ramirez@buenosaires.ar,Spanish`;
         es: 'badge-lang-es'
       };
       const names = {
-        pt: '🇵🇹 Portuguese',
-        en: '🇬🇧 English',
-        fr: '🇫🇷 French',
-        es: '🇪🇸 Spanish'
+        pt: '🇵🇹 Português',
+        en: '🇬🇧 Inglês',
+        fr: '🇫🇷 Francês',
+        es: '🇪🇸 Espanhol'
       };
       langBadge.className = `badge-lang ${badgeClasses[rec.language] || 'badge-lang-unknown'}`;
       langBadge.textContent = names[rec.language] || rec.language;
     }
   },
 
-  // View 4: Dispatch & Sending Center
+  // Vista 4: Centro de Disparo & Envio
   bindDispatchCenter() {
     const startBtn = document.getElementById('btn-start-dispatch');
     const pauseBtn = document.getElementById('btn-pause-dispatch');
@@ -489,12 +490,12 @@ Diego Ramirez,diego.ramirez@buenosaires.ar,Spanish`;
       pauseBtn.addEventListener('click', () => {
         if (window.MailerEngine.isPaused) {
           window.MailerEngine.resume();
-          pauseBtn.innerHTML = '⏸️ Pause';
-          this.showToast('Dispatch resumed', 'info');
+          pauseBtn.innerHTML = '⏸️ Pausar';
+          this.showToast('Disparo de e-mails retomado.', 'info');
         } else {
           window.MailerEngine.pause();
-          pauseBtn.innerHTML = '▶️ Resume';
-          this.showToast('Dispatch paused', 'info');
+          pauseBtn.innerHTML = '▶️ Retomar';
+          this.showToast('Disparo de e-mails pausado.', 'info');
         }
       });
     }
@@ -502,7 +503,7 @@ Diego Ramirez,diego.ramirez@buenosaires.ar,Spanish`;
     if (stopBtn) {
       stopBtn.addEventListener('click', () => {
         window.MailerEngine.stop();
-        this.showToast('Dispatch stopped', 'warning');
+        this.showToast('Disparo de e-mails interrompido.', 'warning');
       });
     }
 
@@ -510,7 +511,7 @@ Diego Ramirez,diego.ramirez@buenosaires.ar,Spanish`;
       exportBtn.addEventListener('click', () => {
         const csv = window.MailerEngine.exportLogsToCSV();
         if (!csv) {
-          this.showToast('No sent logs available to export.', 'warning');
+          this.showToast('Nenhum registo de envio disponível para exportar.', 'warning');
           return;
         }
 
@@ -518,10 +519,10 @@ Diego Ramirez,diego.ramirez@buenosaires.ar,Spanish`;
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = `bomsucesso_dispatch_report_${new Date().toISOString().slice(0, 10)}.csv`;
+        a.download = `bomsucesso_relatorio_envios_${new Date().toISOString().slice(0, 10)}.csv`;
         a.click();
         URL.revokeObjectURL(url);
-        this.showToast('Exported delivery audit report CSV.', 'success');
+        this.showToast('Relatório de auditoria CSV exportado com sucesso.', 'success');
       });
     }
 
@@ -532,7 +533,7 @@ Diego Ramirez,diego.ramirez@buenosaires.ar,Spanish`;
         window.MailerEngine.saveSentHistory();
         this.renderTerminalLogs();
         this.updateHeaderBadges();
-        this.showToast('Sent logs cleared.', 'info');
+        this.showToast('Registos de envio limpos.', 'info');
       });
     }
   },
@@ -562,13 +563,13 @@ Diego Ramirez,diego.ramirez@buenosaires.ar,Spanish`;
     document.getElementById('modal-breakdown-fr').textContent = fr;
     document.getElementById('modal-breakdown-es').textContent = es;
 
-    // Check template validation
+    // Validação de modelos
     const val = window.MailEditor.validateAllTemplates();
     const warnEl = document.getElementById('modal-warning-missing');
     if (warnEl) {
       if (!val.isValid) {
         warnEl.style.display = 'block';
-        warnEl.textContent = `⚠️ Warning: Templates for [${val.missing.join(', ').toUpperCase()}] are incomplete!`;
+        warnEl.textContent = `⚠️ Aviso: Os modelos de idioma [${val.missing.join(', ').toUpperCase()}] estão incompletos!`;
       } else {
         warnEl.style.display = 'none';
       }
@@ -592,10 +593,10 @@ Diego Ramirez,diego.ramirez@buenosaires.ar,Spanish`;
 
     window.MailerEngine.dispatchCampaign(
       this.recipients,
-      { delayMs },
+      { delayMs, senderName: 'Bom Sucesso Mailing', senderEmail: 'campanha@bomsucesso.com' },
       {
         onStart: ({ total }) => {
-          if (statusText) statusText.textContent = 'Dispatching emails...';
+          if (statusText) statusText.textContent = 'A enviar e-mails da campanha...';
           if (progressBar) progressBar.style.width = '0%';
           if (percentText) percentText.textContent = '0%';
           if (counterText) counterText.textContent = `(0 / ${total})`;
@@ -618,10 +619,10 @@ Diego Ramirez,diego.ramirez@buenosaires.ar,Spanish`;
           this.updateHeaderBadges();
         },
         onComplete: ({ total, sentCount }) => {
-          if (statusText) statusText.textContent = `🎉 Campaign Finished! Successfully dispatched ${sentCount} emails.`;
+          if (statusText) statusText.textContent = `🎉 Campanha Concluída! ${sentCount} e-mails entregues com sucesso.`;
           if (progressBar) progressBar.style.width = '100%';
           if (percentText) percentText.textContent = '100%';
-          this.showToast(`Campaign completed! ${sentCount} multi-lingual emails delivered.`, 'success');
+          this.showToast(`Campanha concluída com sucesso! ${sentCount} e-mails multilíngues entregues.`, 'success');
           this.updateHeaderBadges();
         },
         onError: (err) => {
@@ -635,8 +636,8 @@ Diego Ramirez,diego.ramirez@buenosaires.ar,Spanish`;
     const feed = document.getElementById('terminal-feed');
     if (!feed) return;
 
-    // Remove empty placeholder if present
-    if (feed.children.length === 1 && feed.children[0].textContent.includes('No dispatch activity')) {
+    // Remover texto de vazio inicial
+    if (feed.children.length === 1 && feed.children[0].textContent.includes('Nenhuma atividade')) {
       feed.innerHTML = '';
     }
 
@@ -644,12 +645,12 @@ Diego Ramirez,diego.ramirez@buenosaires.ar,Spanish`;
     row.className = 'log-entry';
     row.innerHTML = `
       <span class="log-time">[${entry.time}]</span>
-      <span class="log-status-ok">SENT</span>
+      <span class="log-status-ok">ENVIADO</span>
       <span class="log-lang">[${entry.lang}]</span>
       <span style="flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-        To: <strong style="color: #ffffff;">${this.escapeHtml(entry.name)}</strong> &lt;${this.escapeHtml(entry.email)}&gt; — <em>"${this.escapeHtml(entry.subject)}"</em>
+        Para: <strong style="color: #ffffff;">${this.escapeHtml(entry.name)}</strong> &lt;${this.escapeHtml(entry.email)}&gt; — <em>"${this.escapeHtml(entry.subject)}"</em>
       </span>
-      <button class="btn btn-secondary btn-sm" style="padding: 1px 6px; font-size: 0.7rem;" onclick="App.inspectSentEmail('${entry.id}')">Inspect</button>
+      <button class="btn btn-secondary btn-sm" style="padding: 1px 6px; font-size: 0.7rem;" onclick="App.inspectSentEmail('${entry.id}')">Inspecionar</button>
     `;
 
     feed.prepend(row);
@@ -662,7 +663,7 @@ Diego Ramirez,diego.ramirez@buenosaires.ar,Spanish`;
     if (window.MailerEngine.sentHistory.length === 0) {
       feed.innerHTML = `
         <div style="color: var(--text-dim); text-align: center; padding: 2rem 0;">
-          No dispatch activity recorded yet. Launch a campaign above to see real-time streaming logs.
+          Nenhuma atividade de envio registada. Inicie uma campanha acima para visualizar o fluxo em tempo real.
         </div>
       `;
       return;
@@ -670,13 +671,13 @@ Diego Ramirez,diego.ramirez@buenosaires.ar,Spanish`;
 
     feed.innerHTML = window.MailerEngine.sentHistory.map(item => `
       <div class="log-entry">
-        <span class="log-time">[${item.deliveredTimeStr || new Date(item.timestamp).toLocaleTimeString()}]</span>
-        <span class="log-status-ok">SENT</span>
-        <span class="log-lang">[${(item.language || 'en').toUpperCase()}]</span>
+        <span class="log-time">[${item.deliveredTimeStr || new Date(item.timestamp).toLocaleTimeString('pt-PT')}]</span>
+        <span class="log-status-ok">ENVIADO</span>
+        <span class="log-lang">[${(item.language || 'pt').toUpperCase()}]</span>
         <span style="flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-          To: <strong style="color: #ffffff;">${this.escapeHtml(item.recipientName)}</strong> &lt;${this.escapeHtml(item.recipientEmail)}&gt; — <em>"${this.escapeHtml(item.subject)}"</em>
+          Para: <strong style="color: #ffffff;">${this.escapeHtml(item.recipientName)}</strong> &lt;${this.escapeHtml(item.recipientEmail)}&gt; — <em>"${this.escapeHtml(item.subject)}"</em>
         </span>
-        <button class="btn btn-secondary btn-sm" style="padding: 1px 6px; font-size: 0.7rem;" onclick="App.inspectSentEmail('${item.id}')">Inspect</button>
+        <button class="btn btn-secondary btn-sm" style="padding: 1px 6px; font-size: 0.7rem;" onclick="App.inspectSentEmail('${item.id}')">Inspecionar</button>
       </div>
     `).join('');
   },
@@ -691,11 +692,11 @@ Diego Ramirez,diego.ramirez@buenosaires.ar,Spanish`;
 
     content.innerHTML = `
       <div style="background: var(--bg-card-elevated); padding: 1rem; border-radius: var(--radius-md); margin-bottom: 1rem; font-size: 0.85rem; border: 1px solid var(--border-subtle);">
-        <div style="margin-bottom: 4px;"><strong>Dispatched Time:</strong> ${new Date(record.timestamp).toLocaleString()}</div>
-        <div style="margin-bottom: 4px;"><strong>Recipient:</strong> ${this.escapeHtml(record.recipientName)} &lt;${this.escapeHtml(record.recipientEmail)}&gt;</div>
-        <div style="margin-bottom: 4px;"><strong>Language Sent:</strong> <span class="badge-lang badge-lang-${record.language}">[${(record.language || '').toUpperCase()}]</span></div>
-        <div style="margin-bottom: 4px;"><strong>Subject:</strong> <span style="color: #a5b4fc; font-weight: 600;">${this.escapeHtml(record.subject)}</span></div>
-        <div><strong>Status:</strong> <span style="color: #34d399; font-weight: 600;">Delivered ✓</span></div>
+        <div style="margin-bottom: 4px;"><strong>Data e Hora de Envio:</strong> ${new Date(record.timestamp).toLocaleString('pt-PT')}</div>
+        <div style="margin-bottom: 4px;"><strong>Destinatário:</strong> ${this.escapeHtml(record.recipientName)} &lt;${this.escapeHtml(record.recipientEmail)}&gt;</div>
+        <div style="margin-bottom: 4px;"><strong>Idioma Enviado:</strong> <span class="badge-lang badge-lang-${record.language}">[${(record.language || '').toUpperCase()}]</span></div>
+        <div style="margin-bottom: 4px;"><strong>Assunto:</strong> <span style="color: #a5b4fc; font-weight: 600;">${this.escapeHtml(record.subject)}</span></div>
+        <div><strong>Estado de Entrega:</strong> <span style="color: #34d399; font-weight: 600;">Entregue ✓</span></div>
       </div>
 
       <div style="border: 1px solid var(--border-subtle); border-radius: var(--radius-md); overflow: hidden;">
@@ -708,10 +709,10 @@ Diego Ramirez,diego.ramirez@buenosaires.ar,Spanish`;
     modal.classList.add('active');
   },
 
-  // Modals Controller
+  // Controlador de Modais
   bindModals() {
     document.querySelectorAll('.modal-backdrop').forEach(modal => {
-      // Close when clicking outside or close buttons
+      // Fechar ao clicar fora ou no botão fechar
       modal.addEventListener('click', (e) => {
         if (e.target === modal || e.target.classList.contains('modal-close-btn')) {
           modal.classList.remove('active');
@@ -719,14 +720,14 @@ Diego Ramirez,diego.ramirez@buenosaires.ar,Spanish`;
       });
     });
 
-    // Close on Escape key
+    // Fechar com tecla Escape
     window.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') {
         document.querySelectorAll('.modal-backdrop.active').forEach(m => m.classList.remove('active'));
       }
     });
 
-    // Confirm Dispatch
+    // Confirmar Disparo
     const confirmBtn = document.getElementById('btn-modal-confirm-send');
     if (confirmBtn) {
       confirmBtn.addEventListener('click', () => {
@@ -736,7 +737,7 @@ Diego Ramirez,diego.ramirez@buenosaires.ar,Spanish`;
       });
     }
 
-    // Manual Add Contact Modal
+    // Modal Adicionar Destinatário Manualmente
     const openAddBtn = document.getElementById('btn-open-add-contact');
     const modalAdd = document.getElementById('modal-add-recipient');
     const submitAddBtn = document.getElementById('btn-submit-add-recipient');
@@ -759,7 +760,7 @@ Diego Ramirez,diego.ramirez@buenosaires.ar,Spanish`;
         const lang = langInput ? langInput.value : 'pt';
 
         if (!name || !email) {
-          this.showToast('Please enter both recipient name and email.', 'warning');
+          this.showToast('Por favor, introduza o nome e o e-mail do destinatário.', 'warning');
           return;
         }
 
@@ -784,39 +785,39 @@ Diego Ramirez,diego.ramirez@buenosaires.ar,Spanish`;
         if (emailInput) emailInput.value = '';
 
         modalAdd.classList.remove('active');
-        this.showToast(`Added ${name} to mailing list!`, 'success');
+        this.showToast(`Adicionado ${name} à lista de correio com sucesso!`, 'success');
       });
     }
   },
 
-  // Save Campaign Draft
+  // Guardar Rascunho da Campanha
   bindSaveDraft() {
     const saveBtn = document.getElementById('btn-save-draft');
     if (saveBtn) {
       saveBtn.addEventListener('click', () => {
         window.MailEditor.saveToStorage();
         this.saveContactsToStorage();
-        this.showToast('Campaign draft and all 4 language templates saved to local storage! 💾', 'success');
+        this.showToast('Rascunho da campanha e modelos nos 4 idiomas guardados com sucesso! 💾', 'success');
       });
     }
   },
 
   saveContactsToStorage() {
     try {
-      localStorage.setItem('mailing_list_contacts', JSON.stringify(this.recipients));
+      localStorage.setItem('bomsucesso_mailing_contacts', JSON.stringify(this.recipients));
     } catch (e) {
-      console.warn('Failed to save contacts to storage', e);
+      console.warn('Falha ao guardar contactos no armazenamento local', e);
     }
   },
 
   loadContactsFromStorage() {
     try {
-      const saved = localStorage.getItem('mailing_list_contacts');
+      const saved = localStorage.getItem('bomsucesso_mailing_contacts') || localStorage.getItem('mailing_list_contacts');
       if (saved) {
         this.recipients = JSON.parse(saved);
       }
     } catch (e) {
-      console.warn('Failed to load contacts from storage', e);
+      console.warn('Falha ao carregar contactos do armazenamento local', e);
     }
   },
 
@@ -831,7 +832,7 @@ Diego Ramirez,diego.ramirez@buenosaires.ar,Spanish`;
   }
 };
 
-// Bootstrap when DOM is ready
+// Inicialização após carregamento do DOM
 document.addEventListener('DOMContentLoaded', () => {
   App.init();
 });

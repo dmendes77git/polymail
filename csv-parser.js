@@ -1,32 +1,33 @@
 /**
- * Multi-Lingual Mailing List - CSV Parser & Data Normalizer
+ * Bom Sucesso Mailing - Analisador e Normalizador de Ficheiros CSV
+ * Idioma de Interface: Português (PT-PT)
  */
 
 const CSVParser = {
-  // Normalize language strings to supported keys: 'pt', 'en', 'fr', 'es'
+  // Normalizar strings de idioma para os 4 códigos suportados: 'pt', 'en', 'fr', 'es'
   normalizeLanguage(rawLang) {
-    if (!rawLang) return 'en'; // default fallback
+    if (!rawLang) return 'pt'; // padrão em português
     const clean = String(rawLang).trim().toLowerCase()
-      .normalize('NFD').replace(/[\u0300-\u036f]/g, ''); // remove accents for comparison
+      .normalize('NFD').replace(/[\u0300-\u036f]/g, '');
 
-    // Portuguese
-    if (['pt', 'por', 'portuguese', 'portugues', 'pt-br', 'pt-pt', 'brasil', 'brazil', 'portugal', 'lingua portuguesa'].includes(clean)) {
+    // Português
+    if (['pt', 'por', 'portuguese', 'portugues', 'portugues (pt)', 'portugues (br)', 'pt-br', 'pt-pt', 'brasil', 'brazil', 'portugal', 'lingua portuguesa'].includes(clean)) {
       return 'pt';
     }
-    // English
+    // Inglês
     if (['en', 'eng', 'english', 'ingles', 'anglais', 'en-us', 'en-gb', 'uk', 'usa', 'us'].includes(clean)) {
       return 'en';
     }
-    // French
+    // Francês
     if (['fr', 'fra', 'fre', 'french', 'francais', 'fr-fr', 'fr-ca', 'france'].includes(clean)) {
       return 'fr';
     }
-    // Spanish
+    // Espanhol
     if (['es', 'spa', 'spanish', 'espanol', 'espanhol', 'es-es', 'es-mx', 'spain', 'espana'].includes(clean)) {
       return 'es';
     }
 
-    // Prefix checks
+    // Verificação de prefixos
     if (clean.startsWith('pt')) return 'pt';
     if (clean.startsWith('en')) return 'en';
     if (clean.startsWith('fr')) return 'fr';
@@ -35,22 +36,22 @@ const CSVParser = {
     return 'unknown';
   },
 
-  // Supported language metadata
+  // Metadados dos 4 idiomas suportados
   languages: {
-    pt: { code: 'pt', name: 'Portuguese', nativeName: 'Português', flag: '🇵🇹/🇧🇷', icon: '🇧🇷' },
-    en: { code: 'en', name: 'English', nativeName: 'English', flag: '🇬🇧/🇺🇸', icon: '🇬🇧' },
-    fr: { code: 'fr', name: 'French', nativeName: 'Français', flag: '🇫🇷', icon: '🇫🇷' },
-    es: { code: 'es', name: 'Spanish', nativeName: 'Español', flag: '🇪🇸', icon: '🇪🇸' }
+    pt: { code: 'pt', name: 'Português', nativeName: 'Português', flag: '🇵🇹', icon: '🇵🇹' },
+    en: { code: 'en', name: 'Inglês', nativeName: 'English', flag: '🇬🇧', icon: '🇬🇧' },
+    fr: { code: 'fr', name: 'Francês', nativeName: 'Français', flag: '🇫🇷', icon: '🇫🇷' },
+    es: { code: 'es', name: 'Espanhol', nativeName: 'Español', flag: '🇪🇸', icon: '🇪🇸' }
   },
 
-  // Email format validation
+  // Validação de formato de e-mail
   isValidEmail(email) {
     if (!email) return false;
     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return re.test(String(email).trim());
   },
 
-  // Auto-detect delimiter (, ; \t |)
+  // Deteção automática de delimitador (, ; \t |)
   detectDelimiter(text) {
     const sample = text.slice(0, 1000);
     const commas = (sample.match(/,/g) || []).length;
@@ -62,10 +63,10 @@ const CSVParser = {
     return ',';
   },
 
-  // Parse CSV text with robust quotes handling
+  // Analisador de texto CSV em conformidade com RFC-4180
   parse(csvText) {
     if (!csvText || !csvText.trim()) {
-      return { recipients: [], stats: this.getEmptyStats(), errors: ['CSV content is empty'] };
+      return { recipients: [], stats: this.getEmptyStats(), errors: ['O conteúdo do ficheiro CSV está vazio.'] };
     }
 
     const delimiter = this.detectDelimiter(csvText);
@@ -74,7 +75,6 @@ const CSVParser = {
     let currentCell = '';
     let inQuotes = false;
 
-    // Standard RFC-4180 CSV character parser
     for (let i = 0; i < csvText.length; i++) {
       const char = csvText[i];
       const nextChar = csvText[i + 1];
@@ -82,7 +82,7 @@ const CSVParser = {
       if (char === '"') {
         if (inQuotes && nextChar === '"') {
           currentCell += '"';
-          i++; // skip escaped quote
+          i++;
         } else {
           inQuotes = !inQuotes;
         }
@@ -90,7 +90,7 @@ const CSVParser = {
         currentLine.push(currentCell.trim());
         currentCell = '';
       } else if ((char === '\r' || char === '\n') && !inQuotes) {
-        if (char === '\r' && nextChar === '\n') i++; // CRLF
+        if (char === '\r' && nextChar === '\n') i++;
         currentLine.push(currentCell.trim());
         if (currentLine.some(c => c.length > 0)) {
           lines.push(currentLine);
@@ -110,10 +110,10 @@ const CSVParser = {
     }
 
     if (lines.length === 0) {
-      return { recipients: [], stats: this.getEmptyStats(), errors: ['No data rows found in CSV'] };
+      return { recipients: [], stats: this.getEmptyStats(), errors: ['Nenhuma linha de dados encontrada no ficheiro CSV.'] };
     }
 
-    // Identify header row
+    // Identificar linha de cabeçalhos
     const rawHeaders = lines[0].map(h => h.toLowerCase().trim().replace(/['"]/g, ''));
     let nameIdx = -1;
     let emailIdx = -1;
@@ -121,20 +121,18 @@ const CSVParser = {
 
     rawHeaders.forEach((h, idx) => {
       const normH = h.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-      if (nameIdx === -1 && (normH.includes('name') || normH.includes('nome') || normH.includes('nom') || normH.includes('nombre') || normH === 'recipient' || normH === 'contact')) {
+      if (nameIdx === -1 && (normH.includes('name') || normH.includes('nome') || normH.includes('nom') || normH.includes('nombre') || normH === 'recipient' || normH === 'contact' || normH === 'destinatario')) {
         nameIdx = idx;
       }
       if (emailIdx === -1 && (normH.includes('mail') || normH.includes('correo') || normH.includes('courriel') || normH.includes('correio'))) {
         emailIdx = idx;
       }
-      if (langIdx === -1 && (normH.includes('lang') || normH.includes('idiom') || normH.includes('lingua') || normH.includes('locale') || normH.includes('country'))) {
+      if (langIdx === -1 && (normH.includes('lang') || normH.includes('idiom') || normH.includes('lingua') || normH.includes('locale') || normH.includes('country') || normH.includes('pais'))) {
         langIdx = idx;
       }
     });
 
-    // Fallbacks if headers not detected by name
     if (emailIdx === -1) {
-      // Find column with @ symbols in first data row
       if (lines.length > 1) {
         lines[1].forEach((cell, idx) => {
           if (cell.includes('@') && emailIdx === -1) emailIdx = idx;
@@ -153,7 +151,7 @@ const CSVParser = {
       const row = lines[i];
       if (row.length === 0 || row.every(c => !c)) continue;
 
-      const rawName = row[nameIdx] || 'Friend';
+      const rawName = row[nameIdx] || 'Estimado(a) Cliente';
       const rawEmail = row[emailIdx] || '';
       const rawLang = row[langIdx] || '';
 
@@ -164,8 +162,8 @@ const CSVParser = {
         id: `rec_${Date.now()}_${i}_${Math.random().toString(36).substr(2, 4)}`,
         name: rawName,
         email: rawEmail,
-        rawLanguage: rawLang || 'Not specified',
-        language: normalizedLang === 'unknown' ? 'en' : normalizedLang, // fallback to en
+        rawLanguage: rawLang || 'Não especificado',
+        language: normalizedLang === 'unknown' ? 'pt' : normalizedLang,
         originalLanguageKey: normalizedLang,
         isValidEmail: isEmailValid,
         status: isEmailValid ? 'ready' : 'invalid_email',
@@ -173,12 +171,11 @@ const CSVParser = {
       };
 
       if (!isEmailValid) {
-        errors.push(`Row ${i + 1}: Invalid email address "${rawEmail}" for ${rawName}`);
+        errors.push(`Linha ${i + 1}: Endereço de e-mail inválido "${rawEmail}" para ${rawName}`);
       }
 
       recipients.push(recipient);
 
-      // Stats
       stats.total++;
       if (isEmailValid) {
         stats.valid++;

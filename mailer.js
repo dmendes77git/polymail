@@ -1,5 +1,6 @@
 /**
- * Multi-Lingual Mailing List - Mailer Engine & Dispatch Simulator
+ * Bom Sucesso Mailing - Motor de Disparo & Simulador de Telemetria
+ * Idioma de Interface: Português (PT-PT)
  */
 
 const MailerEngine = {
@@ -10,12 +11,12 @@ const MailerEngine = {
   sentHistory: [],
   logs: [],
 
-  // Interpolate variables in subject and body
+  // Interpolar variáveis no assunto e no corpo do e-mail
   interpolate(text, recipient) {
     if (!text) return '';
     let result = text;
 
-    const todayStr = new Date().toLocaleDateString(undefined, {
+    const todayStr = new Date().toLocaleDateString('pt-PT', {
       year: 'numeric',
       month: 'long',
       day: 'numeric'
@@ -23,28 +24,27 @@ const MailerEngine = {
 
     const langNames = {
       pt: 'Português',
-      en: 'English',
-      fr: 'Français',
-      es: 'Español'
+      en: 'Inglês',
+      fr: 'Francês',
+      es: 'Espanhol'
     };
 
-    // Clean up any editor span tags around variables first
+    // Limpar quaisquer etiquetas span em torno das variáveis
     result = result.replace(/<span class="editor-variable-tag"[^>]*>(\{\{[^}]+\}\})<\/span>/gi, '$1');
 
     const vars = {
-      '{{name}}': recipient.name || 'Friend',
-      '{{Name}}': recipient.name || 'Friend',
-      '{{NAME}}': (recipient.name || 'Friend').toUpperCase(),
+      '{{name}}': recipient.name || 'Caro(a) Cliente',
+      '{{Name}}': recipient.name || 'Caro(a) Cliente',
+      '{{NAME}}': (recipient.name || 'Caro(a) Cliente').toUpperCase(),
       '{{email}}': recipient.email || '',
       '{{Email}}': recipient.email || '',
       '{{language}}': langNames[recipient.language] || recipient.language,
       '{{raw_language}}': recipient.rawLanguage || recipient.language,
       '{{date}}': todayStr,
-      '{{unsubscribe}}': `<a href="#unsubscribe" style="color: #64748b; text-decoration: underline;">Unsubscribe / Cancelar inscrição</a>`
+      '{{unsubscribe}}': `<a href="#cancelar-inscricao" style="color: #64748b; text-decoration: underline;">Cancelar inscrição / Unsubscribe</a>`
     };
 
     Object.entries(vars).forEach(([tag, val]) => {
-      // Escape tag for regex
       const regex = new RegExp(tag.replace(/([{}])/g, '\\$1'), 'g');
       result = result.replace(regex, val);
     });
@@ -52,11 +52,11 @@ const MailerEngine = {
     return result;
   },
 
-  // Generate rendered email for a specific recipient
+  // Gerar e-mail renderizado para um destinatário específico
   renderEmailForRecipient(recipient) {
     if (!recipient) return null;
 
-    const lang = recipient.language || 'en';
+    const lang = recipient.language || 'pt';
     const template = window.MailEditor.getTemplateForLanguage(lang);
 
     const interpolatedSubject = this.interpolate(template.subject, recipient);
@@ -73,7 +73,7 @@ const MailerEngine = {
     };
   },
 
-  // Dispatch campaign to all valid recipients
+  // Disparar campanha para todos os destinatários válidos
   async dispatchCampaign(recipients, options = {}, callbacks = {}) {
     if (this.isSending) return;
     this.isSending = true;
@@ -84,26 +84,25 @@ const MailerEngine = {
 
     if (total === 0) {
       this.isSending = false;
-      if (callbacks.onError) callbacks.onError('No valid recipients found to send emails to.');
+      if (callbacks.onError) callbacks.onError('Nenhum destinatário válido encontrado para envio.');
       return;
     }
 
-    const delayMs = options.delayMs !== undefined ? options.delayMs : 250; // default 250ms per email
-    const senderName = options.senderName || 'Mailing List Service';
-    const senderEmail = options.senderEmail || 'campaign@news.company.com';
+    const delayMs = options.delayMs !== undefined ? options.delayMs : 250;
+    const senderName = options.senderName || 'Bom Sucesso Mailing';
+    const senderEmail = options.senderEmail || 'campanha@bomsucesso.com';
 
     if (callbacks.onStart) {
       callbacks.onStart({ total, recipients: validRecipients });
     }
 
-    const batchId = `batch_${Date.now()}`;
+    const batchId = `lote_${Date.now()}`;
     let sentCount = 0;
     let failedCount = 0;
 
     for (let i = 0; i < total; i++) {
       if (!this.isSending) {
-        // Aborted
-        break;
+        break; // Cancelado
       }
 
       while (this.isPaused) {
@@ -114,7 +113,6 @@ const MailerEngine = {
       const rec = validRecipients[i];
       const rendered = this.renderEmailForRecipient(rec);
 
-      // Create dispatched record
       const dispatchRecord = {
         id: `mail_${Date.now()}_${i}`,
         batchId,
@@ -128,16 +126,15 @@ const MailerEngine = {
         senderEmail,
         status: 'delivered',
         timestamp: new Date(),
-        deliveredTimeStr: new Date().toLocaleTimeString()
+        deliveredTimeStr: new Date().toLocaleTimeString('pt-PT')
       };
 
-      // Record to history and logs
       this.sentHistory.unshift(dispatchRecord);
       this.logs.unshift({
         id: dispatchRecord.id,
         time: dispatchRecord.deliveredTimeStr,
         level: 'success',
-        message: `Dispatched to ${rec.name} (${rec.email}) [${rec.language.toUpperCase()}]`,
+        message: `Enviado para ${rec.name} (${rec.email}) [${rec.language.toUpperCase()}]`,
         subject: rendered.subject,
         details: dispatchRecord
       });
@@ -192,29 +189,28 @@ const MailerEngine = {
 
   saveSentHistory() {
     try {
-      // Keep last 200 sent emails in storage
       const toSave = this.sentHistory.slice(0, 200);
-      localStorage.setItem('mailing_list_sent_history', JSON.stringify(toSave));
+      localStorage.setItem('bomsucesso_mailing_sent_history', JSON.stringify(toSave));
     } catch (e) {
-      console.warn('Failed to save sent history to storage', e);
+      console.warn('Falha ao guardar histórico no armazenamento local', e);
     }
   },
 
   loadSentHistory() {
     try {
-      const saved = localStorage.getItem('mailing_list_sent_history');
+      const saved = localStorage.getItem('bomsucesso_mailing_sent_history') || localStorage.getItem('mailing_list_sent_history');
       if (saved) {
         this.sentHistory = JSON.parse(saved);
       }
     } catch (e) {
-      console.warn('Failed to load sent history', e);
+      console.warn('Falha ao carregar histórico de envios', e);
     }
   },
 
   exportLogsToCSV() {
     if (this.sentHistory.length === 0) return null;
 
-    const headers = ['ID', 'Timestamp', 'Recipient Name', 'Recipient Email', 'Language', 'Subject', 'Status'];
+    const headers = ['ID', 'Data_Hora', 'Nome_Destinatario', 'Email_Destinatario', 'Idioma', 'Assunto', 'Estado'];
     const rows = this.sentHistory.map(item => [
       `"${item.id}"`,
       `"${new Date(item.timestamp).toISOString()}"`,

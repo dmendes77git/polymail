@@ -1,23 +1,24 @@
 /**
- * Multi-Lingual Mailing List - Rich Text Editor & Template Manager
+ * Bom Sucesso Mailing - Editor de Texto Formatado (WYSIWYG) & Gestor de Modelos
+ * Idioma de Interface: Português (PT-PT)
  */
 
 const MailEditor = {
-  activeLanguage: 'pt', // Default to Portuguese or active tab
+  activeLanguage: 'pt', // Padrão: Português
 
   templates: {
     pt: {
-      subject: 'Olá {{name}}, temos novidades especiais para você!',
+      subject: 'Olá {{name}}, temos novidades exclusivas para si!',
       body: `<h2>Olá, {{name}}! 👋</h2>
-<p>Esperamos que esta mensagem o encontre bem. Temos o prazer de apresentar as últimas atualizações da nossa plataforma preparadas especialmente para você.</p>
+<p>Esperamos que esta mensagem o encontre bem. Temos o prazer de partilhar consigo as mais recentes atualizações e melhorias preparadas especialmente a pensar em si.</p>
 <p><strong>Destaques da semana:</strong></p>
 <ul>
-  <li>Novas funcionalidades de automação de campanhas</li>
-  <li>Segmentação inteligente por idioma e preferências</li>
-  <li>Relatórios analíticos de entrega em tempo real</li>
+  <li>Novas funcionalidades de automação de campanhas personalizadas</li>
+  <li>Segmentação inteligente com base no idioma e preferências</li>
+  <li>Relatórios analíticos de entrega e telemetria em tempo real</li>
 </ul>
-<p>Se tiver alguma dúvida, basta responder diretamente a este e-mail ({{email}}). Nossa equipe de suporte está pronta para ajudar.</p>
-<p style="margin-top: 24px;">Atenciosamente,<br><strong>Equipe de Sucesso do Cliente</strong></p>`
+<p>Caso tenha alguma dúvida, basta responder diretamente a este e-mail ({{email}}). A nossa equipa de apoio está totalmente ao seu dispor.</p>
+<p style="margin-top: 24px;">Com os melhores cumprimentos,<br><strong>A Equipa Bom Sucesso Mailing</strong></p>`
     },
     en: {
       subject: 'Hello {{name}}, we have exciting news for you!',
@@ -29,8 +30,8 @@ const MailEditor = {
   <li>Intelligent segmentation by language and geography</li>
   <li>Real-time deliverability analytics and live telemetry</li>
 </ul>
-<p>If you have any questions, simply reply directly to this email at {{email}}. Our team is here to support you anytime.</p>
-<p style="margin-top: 24px;">Best regards,<br><strong>The Customer Success Team</strong></p>`
+<p>If you have any questions, simply reply directly to this email at {{email}}. Our support team is here to assist you anytime.</p>
+<p style="margin-top: 24px;">Best regards,<br><strong>The Bom Sucesso Team</strong></p>`
     },
     fr: {
       subject: 'Bonjour {{name}}, nous avons des nouvelles exclusives pour vous !',
@@ -43,7 +44,7 @@ const MailEditor = {
   <li>Analyses détaillées de délivrabilité en direct</li>
 </ul>
 <p>Pour toute question, n'hésitez pas à répondre directement à ce message ({{email}}). Notre équipe se tient à votre entière disposition.</p>
-<p style="margin-top: 24px;">Bien cordialement,<br><strong>L'équipe Relations Clients</strong></p>`
+<p style="margin-top: 24px;">Bien cordialement,<br><strong>L'équipe Bom Sucesso</strong></p>`
     },
     es: {
       subject: '¡Hola {{name}}, tenemos novedades increíbles para ti!',
@@ -56,7 +57,7 @@ const MailEditor = {
   <li>Estadísticas de entrega e informes en tiempo real</li>
 </ul>
 <p>Si tienes alguna consulta, no dudes en responder directamente a este correo ({{email}}). Nuestro equipo está a tu entera disposición.</p>
-<p style="margin-top: 24px;">Un cordial saludo,<br><strong>El Equipo de Éxito del Cliente</strong></p>`
+<p style="margin-top: 24px;">Un cordial saludo,<br><strong>El Equipo Bom Sucesso</strong></p>`
     }
   },
 
@@ -64,19 +65,19 @@ const MailEditor = {
 
   presets: {
     welcome: {
-      name: 'Welcome / Onboarding',
+      name: 'Boas-vindas & Onboarding',
       pt: {
-        subject: 'Bem-vindo(a) a bordo, {{name}}!',
-        body: `<h2>Bem-vindo(a) à nossa comunidade, {{name}}! 🎉</h2>
-<p>Estamos muito felizes em ter você conosco! Sua conta associada a <strong>{{email}}</strong> já está ativa.</p>
-<p>Aqui estão 3 passos rápidos para começar:</p>
+        subject: 'Bem-vindo(a) à Bom Sucesso, {{name}}!',
+        body: `<h2>Damos-lhe as boas-vindas à nossa comunidade, {{name}}! 🎉</h2>
+<p>Estamos muito felizes por tê-lo(a) connosco! A sua conta associada ao endereço <strong>{{email}}</strong> já se encontra ativa.</p>
+<p>Eis 3 passos rápidos para começar:</p>
 <ol>
-  <li>Complete seu perfil e preferências de idioma</li>
-  <li>Explore o painel de controle interativo</li>
-  <li>Crie sua primeira lista de envio personalizada</li>
+  <li>Complete o seu perfil e preferências de comunicação</li>
+  <li>Explore o painel de controlo interativo</li>
+  <li>Crie a sua primeira lista de envio personalizada</li>
 </ol>
-<p>Qualquer dúvida, estamos sempre à disposição!</p>
-<p>Abraços,<br><strong>Equipe de Boas-Vindas</strong></p>`
+<p>Qualquer dúvida que surja, estamos sempre à sua inteira disposição!</p>
+<p>Com os melhores cumprimentos,<br><strong>Equipa de Boas-Vindas Bom Sucesso</strong></p>`
       },
       en: {
         subject: 'Welcome aboard, {{name}}!',
@@ -89,7 +90,7 @@ const MailEditor = {
   <li>Launch your first personalized mailing campaign</li>
 </ol>
 <p>If you need any guidance, we are just an email away!</p>
-<p>Warm regards,<br><strong>The Onboarding Team</strong></p>`
+<p>Warm regards,<br><strong>The Bom Sucesso Team</strong></p>`
       },
       fr: {
         subject: 'Bienvenue à bord, {{name}} !',
@@ -102,7 +103,7 @@ const MailEditor = {
   <li>Créez votre première campagne d'envoi ciblée</li>
 </ol>
 <p>Nous restons à votre écoute pour toute question !</p>
-<p>Chaleureusement,<br><strong>L'équipe d'Accueil</strong></p>`
+<p>Chaleureusement,<br><strong>L'équipe Bom Sucesso</strong></p>`
       },
       es: {
         subject: '¡Te damos la bienvenida a bordo, {{name}}!',
@@ -115,23 +116,23 @@ const MailEditor = {
   <li>Envía tu primera campaña segmentada</li>
 </ol>
 <p>¡Cualquier duda, estamos a tu total disposición!</p>
-<p>Saludos cordiales,<br><strong>El Equipo de Bienvenida</strong></p>`
+<p>Saludos cordiales,<br><strong>El Equipo Bom Sucesso</strong></p>`
       }
     },
 
     product_launch: {
-      name: 'Product Launch & Offer',
+      name: 'Lançamento de Produto & Novidades',
       pt: {
         subject: '🚀 Grande Lançamento: Conheça as novas ferramentas, {{name}}!',
         body: `<h2>O futuro das comunicações chegou, {{name}}! 🚀</h2>
-<p>Hoje estamos lançando oficialmente a nova versão da nossa ferramenta de gestão de listas e disparos multilíngues.</p>
-<p><strong>O que há de novo:</strong></p>
+<p>Hoje lançamos oficialmente a nova versão da plataforma Bom Sucesso Mailing para gestão de listas e disparos multilíngues automatizados.</p>
+<p><strong>Novidades principais:</strong></p>
 <ul>
-  <li>Editor visual com suporte a formatação avançada</li>
-  <li>Envio dinâmico com base no idioma do destinatário</li>
-  <li>Pré-visualização individual por contato em tempo real</li>
+  <li>Editor visual avançado com suporte a formatação rica</li>
+  <li>Envio dinâmico adaptado ao idioma de cada destinatário</li>
+  <li>Pré-visualização individual por contacto em tempo real</li>
 </ul>
-<p>Acesse sua conta agora e aproveite todos os novos recursos!</p>`
+<p>Aceda à sua conta e aproveite todas as novas funcionalidades!</p>`
       },
       en: {
         subject: '🚀 Major Launch: Discover our new tools, {{name}}!',
@@ -208,15 +209,15 @@ const MailEditor = {
       });
     }
 
-    // Language tab buttons
+    // Botões dos separadores de idioma
     document.querySelectorAll('.lang-tab-btn').forEach(btn => {
-      btn.addEventListener('click', (e) => {
+      btn.addEventListener('click', () => {
         const lang = btn.getAttribute('data-lang');
         this.switchLanguage(lang);
       });
     });
 
-    // Formatting buttons
+    // Botões de formatação
     document.querySelectorAll('[data-format-cmd]').forEach(btn => {
       btn.addEventListener('click', (e) => {
         e.preventDefault();
@@ -226,7 +227,7 @@ const MailEditor = {
       });
     });
 
-    // Color pickers
+    // Seletores de cores
     const textColorPicker = document.getElementById('text-color-picker');
     if (textColorPicker) {
       textColorPicker.addEventListener('input', (e) => {
@@ -241,7 +242,7 @@ const MailEditor = {
       });
     }
 
-    // Tag pills
+    // Inserção de etiquetas dinâmicas
     document.querySelectorAll('.tag-pill-btn').forEach(pill => {
       pill.addEventListener('click', (e) => {
         e.preventDefault();
@@ -250,18 +251,18 @@ const MailEditor = {
       });
     });
 
-    // Link insertion
+    // Inserir hiperligação
     const insertLinkBtn = document.getElementById('btn-insert-link');
     if (insertLinkBtn) {
       insertLinkBtn.addEventListener('click', () => {
-        const url = prompt('Enter link URL (e.g. https://example.com):', 'https://');
+        const url = prompt('Introduza o endereço URL da hiperligação (ex: https://exemplo.com):', 'https://');
         if (url && url !== 'https://') {
           this.execCommand('createLink', url);
         }
       });
     }
 
-    // Toggle HTML Mode
+    // Alternar modo HTML
     const toggleHtmlBtn = document.getElementById('btn-toggle-html');
     if (toggleHtmlBtn) {
       toggleHtmlBtn.addEventListener('click', () => {
@@ -269,13 +270,13 @@ const MailEditor = {
       });
     }
 
-    // Preset selector
+    // Seletor de modelos pré-definidos
     const presetSelect = document.getElementById('template-preset-select');
     if (presetSelect) {
       presetSelect.addEventListener('change', (e) => {
         const presetKey = e.target.value;
         if (presetKey && this.presets[presetKey]) {
-          if (confirm(`Load the "${this.presets[presetKey].name}" multi-lingual template preset? This will populate all 4 languages.`)) {
+          if (confirm(`Pretende carregar o modelo pré-definido "${this.presets[presetKey].name}"? Isto irá preencher os 4 idiomas.`)) {
             this.loadPreset(presetKey);
           }
           e.target.value = '';
@@ -286,12 +287,9 @@ const MailEditor = {
 
   switchLanguage(lang) {
     if (!this.templates[lang]) return;
-    // Save current active state before switching
     this.saveCurrentToState();
-
     this.activeLanguage = lang;
 
-    // Update tab UI
     document.querySelectorAll('.lang-tab-btn').forEach(btn => {
       const btnLang = btn.getAttribute('data-lang');
       if (btnLang === lang) {
@@ -333,10 +331,10 @@ const MailEditor = {
 
     if (currentLangBadge) {
       const names = {
-        pt: '🇧🇷 Português (Portuguese)',
-        en: '🇬🇧 English (English)',
-        fr: '🇫🇷 Français (French)',
-        es: '🇪🇸 Español (Spanish)'
+        pt: 'Português',
+        en: 'Inglês',
+        fr: 'Francês',
+        es: 'Espanhol'
       };
       currentLangBadge.textContent = names[this.activeLanguage] || this.activeLanguage;
     }
@@ -354,13 +352,13 @@ const MailEditor = {
       if (badge) {
         if (hasSubject && hasBody) {
           badge.className = 'lang-status-pill status-ready';
-          badge.textContent = '✓ Ready';
+          badge.textContent = '✓ Pronto';
         } else if (hasSubject || hasBody) {
           badge.className = 'lang-status-pill status-partial';
-          badge.textContent = '• Draft';
+          badge.textContent = '• Rascunho';
         } else {
           badge.className = 'lang-status-pill status-empty';
-          badge.textContent = 'Empty';
+          badge.textContent = 'Vazio';
         }
       }
     });
@@ -413,7 +411,6 @@ const MailEditor = {
       
       range.insertNode(span);
       
-      // Move cursor after the inserted tag
       range.setStartAfter(span);
       range.setEndAfter(span);
       selection.removeAllRanges();
@@ -437,14 +434,14 @@ const MailEditor = {
       textarea.value = editor.innerHTML;
       editor.style.display = 'none';
       textarea.style.display = 'block';
-      if (toggleBtn) toggleBtn.innerHTML = '<span class="icon">👁️</span> Visual WYSIWYG';
+      if (toggleBtn) toggleBtn.innerHTML = '<span class="icon">👁️</span> Editor Visual';
       if (toolbar) toolbar.classList.add('toolbar-disabled');
     } else {
       editor.innerHTML = textarea.value;
       this.templates[this.activeLanguage].body = textarea.value;
       textarea.style.display = 'none';
       editor.style.display = 'block';
-      if (toggleBtn) toggleBtn.innerHTML = '<span class="icon">&lt;/&gt;</span> HTML Code';
+      if (toggleBtn) toggleBtn.innerHTML = '<span class="icon">&lt;/&gt;</span> Código HTML';
       if (toolbar) toolbar.classList.remove('toolbar-disabled');
     }
   },
@@ -469,17 +466,17 @@ const MailEditor = {
   saveToStorage() {
     this.saveCurrentToState();
     try {
-      localStorage.setItem('mailing_list_templates', JSON.stringify(this.templates));
+      localStorage.setItem('bomsucesso_mailing_templates', JSON.stringify(this.templates));
       return true;
     } catch (e) {
-      console.warn('LocalStorage save failed:', e);
+      console.warn('Falha ao guardar modelos no armazenamento local:', e);
       return false;
     }
   },
 
   loadFromStorage() {
     try {
-      const saved = localStorage.getItem('mailing_list_templates');
+      const saved = localStorage.getItem('bomsucesso_mailing_templates') || localStorage.getItem('mailing_list_templates');
       if (saved) {
         const parsed = JSON.parse(saved);
         if (parsed.pt && parsed.en && parsed.fr && parsed.es) {
@@ -487,13 +484,13 @@ const MailEditor = {
         }
       }
     } catch (e) {
-      console.warn('LocalStorage load failed:', e);
+      console.warn('Falha ao carregar modelos do armazenamento local:', e);
     }
   },
 
   getTemplateForLanguage(langKey) {
-    const key = ['pt', 'en', 'fr', 'es'].includes(langKey) ? langKey : 'en';
-    return this.templates[key] || this.templates['en'];
+    const key = ['pt', 'en', 'fr', 'es'].includes(langKey) ? langKey : 'pt';
+    return this.templates[key] || this.templates['pt'];
   },
 
   validateAllTemplates() {
