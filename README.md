@@ -1,4 +1,4 @@
-# PolyMail - Multi-Lingual Mailing List Application
+# Bom Sucesso Mailing App
 
 An interactive web application for managing multi-lingual mailing lists, composing rich-text emails in 4 languages (Portuguese, English, French, Spanish) with dynamic variable interpolation (`{{name}}`, `{{email}}`, `{{language}}`, `{{date}}`), previewing individual recipient messages, and dispatching targeted emails based on recipient language preference.
 

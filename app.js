@@ -1,5 +1,5 @@
 /**
- * PolyMail - Multi-Lingual Mailing List Application Controller
+ * Bom Sucesso Mailing App - Multi-Lingual Mailing List Application Controller
  */
 
 const App = {
@@ -518,7 +518,7 @@ Diego Ramirez,diego.ramirez@buenosaires.ar,Spanish`;
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = `polymail_dispatch_report_${new Date().toISOString().slice(0, 10)}.csv`;
+        a.download = `bomsucesso_dispatch_report_${new Date().toISOString().slice(0, 10)}.csv`;
         a.click();
         URL.revokeObjectURL(url);
         this.showToast('Exported delivery audit report CSV.', 'success');

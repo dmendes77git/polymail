@@ -1,4 +1,4 @@
-# Lightweight Static Web Server for PolyMail App
+# Lightweight Static Web Server for Bom Sucesso Mailing App
 $port = 8080
 $prefix = "http://localhost:$port/"
 $baseDir = Split-Path -Parent $MyInvocation.MyCommand.Path
@@ -22,7 +22,7 @@ $listener.Prefixes.Add($prefix)
 try {
     $listener.Start()
     Write-Host "===================================================="
-    Write-Host " PolyMail Web App running at: $prefix"
+    Write-Host " Bom Sucesso Mailing App running at: $prefix"
     Write-Host " Root Directory: $baseDir"
     Write-Host " Press Ctrl+C in terminal to stop the server"
     Write-Host "===================================================="
