@@ -298,8 +298,8 @@
                   <button class="tool-btn" data-format-cmd="unlink" title="Remover Hiperligação">⛓️‍💥</button>
                   
                   <div class="color-picker-wrapper" title="Cor do Texto">
-                    <span style="font-weight: 700; color: #a5b4fc;">A</span>
-                    <input type="color" id="text-color-picker" value="#ffffff">
+                    <span style="font-weight: 800; color: var(--primary-color);">A</span>
+                    <input type="color" id="text-color-picker" value="#0f172a">
                   </div>
 
                   <div class="color-picker-wrapper" title="Cor de Realce de Fundo">
@@ -390,11 +390,11 @@
               <p style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 0.75rem;">
                 As etiquetas são substituídas dinamicamente com os dados de cada contacto ao enviar ou pré-visualizar.
               </p>
-              <div style="font-size: 0.78rem; display: flex; flex-direction: column; gap: 6px; font-family: var(--font-mono); color: #c7d2fe;">
-                <div><code>{{name}}</code> &rarr; Nome completo do contacto</div>
-                <div><code>{{email}}</code> &rarr; Endereço de e-mail</div>
-                <div><code>{{language}}</code> &rarr; Nome do idioma</div>
-                <div><code>{{date}}</code> &rarr; Data de hoje formatada</div>
+              <div style="font-size: 0.78rem; display: flex; flex-direction: column; gap: 6px; font-family: var(--font-mono); color: var(--text-muted); font-weight: 500;">
+                <div><code style="background: #f1f5f9; padding: 2px 6px; border-radius: 4px; color: var(--primary-color);">{{name}}</code> &rarr; Nome completo do contacto</div>
+                <div><code style="background: #f1f5f9; padding: 2px 6px; border-radius: 4px; color: var(--primary-color);">{{email}}</code> &rarr; Endereço de e-mail</div>
+                <div><code style="background: #f1f5f9; padding: 2px 6px; border-radius: 4px; color: var(--primary-color);">{{language}}</code> &rarr; Nome do idioma</div>
+                <div><code style="background: #f1f5f9; padding: 2px 6px; border-radius: 4px; color: var(--primary-color);">{{date}}</code> &rarr; Data de hoje formatada</div>
               </div>
             </div>
           </div>
@@ -489,12 +489,12 @@
             Cada destinatário receberá a mensagem adaptada ao seu idioma.
           </p>
 
-          <div style="display: inline-flex; gap: 1rem; align-items: center; background: rgba(0,0,0,0.3); padding: 0.6rem 1.5rem; border-radius: var(--radius-full); margin-bottom: 1.5rem; border: 1px solid var(--border-subtle);">
-            <div style="font-size: 0.88rem;">
-              Lista: <strong id="dispatch-total-recipients">0</strong> destinatários válidos
+          <div style="display: inline-flex; gap: 1rem; align-items: center; background: #ffffff; padding: 0.6rem 1.5rem; border-radius: var(--radius-full); margin-bottom: 1.5rem; border: 1px solid var(--border-subtle); box-shadow: var(--shadow-sm);">
+            <div style="font-size: 0.88rem; font-weight: 500;">
+              Lista: <strong id="dispatch-total-recipients" style="color: var(--primary-color);">0</strong> destinatários válidos
             </div>
             <div style="width: 1px; height: 16px; background: var(--border-subtle);"></div>
-            <div style="font-size: 0.88rem;">
+            <div style="font-size: 0.88rem; font-weight: 500;">
               Velocidade: 
               <select id="dispatch-speed-select" class="custom-select" style="padding: 2px 8px; font-size: 0.8rem; margin-left: 4px;">
                 <option value="150">Rápido (150ms/e-mail)</option>
@@ -530,7 +530,7 @@
 
           <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 1rem;">
             <div style="font-size: 0.82rem; color: var(--text-muted);">
-              A enviar atualmente para: <code id="dispatch-current-contact" style="color: #c7d2fe;">-</code>
+              A enviar atualmente para: <code id="dispatch-current-contact" style="color: var(--primary-color); font-weight: 600; background: #f1f5f9; padding: 2px 6px; border-radius: 4px;">-</code>
             </div>
             <div style="display: flex; gap: 8px;">
               <button id="btn-pause-dispatch" class="btn btn-secondary btn-sm">⏸️ Pausar</button>

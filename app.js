@@ -648,7 +648,7 @@ Diego Ramirez,diego.ramirez@buenosaires.ar,Spanish`;
       <span class="log-status-ok">ENVIADO</span>
       <span class="log-lang">[${entry.lang}]</span>
       <span style="flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-        Para: <strong style="color: #ffffff;">${this.escapeHtml(entry.name)}</strong> &lt;${this.escapeHtml(entry.email)}&gt; — <em>"${this.escapeHtml(entry.subject)}"</em>
+        Para: <strong style="color: var(--text-main);">${this.escapeHtml(entry.name)}</strong> &lt;${this.escapeHtml(entry.email)}&gt; — <em>"${this.escapeHtml(entry.subject)}"</em>
       </span>
       <button class="btn btn-secondary btn-sm" style="padding: 1px 6px; font-size: 0.7rem;" onclick="App.inspectSentEmail('${entry.id}')">Inspecionar</button>
     `;
@@ -675,7 +675,7 @@ Diego Ramirez,diego.ramirez@buenosaires.ar,Spanish`;
         <span class="log-status-ok">ENVIADO</span>
         <span class="log-lang">[${(item.language || 'pt').toUpperCase()}]</span>
         <span style="flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-          Para: <strong style="color: #ffffff;">${this.escapeHtml(item.recipientName)}</strong> &lt;${this.escapeHtml(item.recipientEmail)}&gt; — <em>"${this.escapeHtml(item.subject)}"</em>
+          Para: <strong style="color: var(--text-main);">${this.escapeHtml(item.recipientName)}</strong> &lt;${this.escapeHtml(item.recipientEmail)}&gt; — <em>"${this.escapeHtml(item.subject)}"</em>
         </span>
         <button class="btn btn-secondary btn-sm" style="padding: 1px 6px; font-size: 0.7rem;" onclick="App.inspectSentEmail('${item.id}')">Inspecionar</button>
       </div>
@@ -695,12 +695,12 @@ Diego Ramirez,diego.ramirez@buenosaires.ar,Spanish`;
         <div style="margin-bottom: 4px;"><strong>Data e Hora de Envio:</strong> ${new Date(record.timestamp).toLocaleString('pt-PT')}</div>
         <div style="margin-bottom: 4px;"><strong>Destinatário:</strong> ${this.escapeHtml(record.recipientName)} &lt;${this.escapeHtml(record.recipientEmail)}&gt;</div>
         <div style="margin-bottom: 4px;"><strong>Idioma Enviado:</strong> <span class="badge-lang badge-lang-${record.language}">[${(record.language || '').toUpperCase()}]</span></div>
-        <div style="margin-bottom: 4px;"><strong>Assunto:</strong> <span style="color: #a5b4fc; font-weight: 600;">${this.escapeHtml(record.subject)}</span></div>
-        <div><strong>Estado de Entrega:</strong> <span style="color: #34d399; font-weight: 600;">Entregue ✓</span></div>
+        <div style="margin-bottom: 4px;"><strong>Assunto:</strong> <span style="color: var(--primary-color); font-weight: 700;">${this.escapeHtml(record.subject)}</span></div>
+        <div><strong>Estado de Entrega:</strong> <span style="color: var(--success-color); font-weight: 700;">Entregue ✓</span></div>
       </div>
 
-      <div style="border: 1px solid var(--border-subtle); border-radius: var(--radius-md); overflow: hidden;">
-        <div style="background: #f8fafc; color: #1e293b; padding: 1.5rem; font-size: 0.92rem; line-height: 1.6;">
+      <div style="border: 1px solid var(--border-subtle); border-radius: var(--radius-md); overflow: hidden; box-shadow: var(--shadow-sm);">
+        <div style="background: #ffffff; color: #1e293b; padding: 1.5rem; font-size: 0.92rem; line-height: 1.6;">
           ${record.htmlBody}
         </div>
       </div>
