@@ -593,7 +593,7 @@ Diego Ramirez,diego.ramirez@buenosaires.ar,Spanish`;
 
     window.MailerEngine.dispatchCampaign(
       this.recipients,
-      { delayMs, senderName: 'Bom Sucesso Mailing', senderEmail: 'campanha@bomsucesso.com' },
+      { delayMs, senderName: 'Bom Sucesso Mailing', senderEmail: 'ownersbomsucesso@gmail.com' },
       {
         onStart: ({ total }) => {
           if (statusText) statusText.textContent = 'A enviar e-mails da campanha...';

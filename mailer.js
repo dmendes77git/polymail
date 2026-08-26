@@ -90,7 +90,7 @@ const MailerEngine = {
 
     const delayMs = options.delayMs !== undefined ? options.delayMs : 250;
     const senderName = options.senderName || 'Bom Sucesso Mailing';
-    const senderEmail = options.senderEmail || 'campanha@bomsucesso.com';
+    const senderEmail = options.senderEmail || 'ownersbomsucesso@gmail.com';
 
     if (callbacks.onStart) {
       callbacks.onStart({ total, recipients: validRecipients });
